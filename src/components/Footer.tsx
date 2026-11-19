@@ -34,10 +34,10 @@ export default function Footer() {
               <span className="font-serif text-xl text-cream-50">Jardin Secret</span>
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-forest-200">
-              Des compléments alimentaires pensés en Côte d'Ivoire pour
-              accompagner l'équilibre hormonal, la fertilité et le bien-être
-              des femmes et des hommes - avec la science, mais aussi avec le
-              cœur.
+              Une sélection de compléments alimentaires pour accompagner
+              l'équilibre hormonal, la fertilité et le bien-être des femmes et
+              des hommes, livrée partout en Côte d'Ivoire - avec exigence, et
+              avec le cœur.
             </p>
             <div className="mt-6 flex gap-4">
               <a

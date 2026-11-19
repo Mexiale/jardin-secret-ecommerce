@@ -4,13 +4,13 @@ import { Leaf, HeartHandshake, FlaskConical, Users } from "lucide-react";
 const values = [
   {
     icon: FlaskConical,
-    title: "Rigueur scientifique",
-    desc: "Chaque formule est élaborée avec des professionnels de santé et dosée selon les recommandations de la littérature scientifique.",
+    title: "Sélection rigoureuse",
+    desc: "Chaque produit est choisi pour sa composition et son dosage, à la lumière des connaissances scientifiques actuelles.",
   },
   {
     icon: Leaf,
     title: "Naturalité",
-    desc: "Des ingrédients choisis avec exigence, sans additifs superflus, pensés pour respecter votre corps.",
+    desc: "Nous privilégions des produits aux compositions claires, sans additifs superflus, pour respecter votre corps.",
   },
   {
     icon: HeartHandshake,
@@ -49,7 +49,7 @@ export default function About() {
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
           <img
             src="https://images.unsplash.com/photo-1637715179830-a0de86dc0c4e?q=80&w=1000&auto=format&fit=crop"
-            alt="Ingrédients naturels et bien-être"
+            alt="Univers bien-être Jardin Secret"
             className="aspect-[4/5] w-full rounded-3xl object-cover"
           />
           <div>
@@ -59,14 +59,14 @@ export default function About() {
             <p className="mt-5 leading-relaxed text-forest-700">
               Le nom « Jardin Secret » évoque cet espace intime que chacune
               porte en elle - un lieu où l'on cultive patiemment son équilibre,
-              loin du jugement. Nous avons voulu créer une marque qui parle
+              loin du jugement. Nous avons voulu créer une boutique qui parle
               avec honnêteté du SOPK, de la fertilité et de la santé
               hormonale, sujets encore trop peu abordés en Côte d'Ivoire.
             </p>
             <p className="mt-4 leading-relaxed text-forest-700">
-              Nos formules - berbérine, NAC, acide folique, Shatavari -
-              sont sélectionnées avec des professionnels de santé, fabriquées
-              sous contrôle qualité strict, et livrées directement chez vous.
+              Nous sélectionnons nos compléments - berbérine, NAC, acide
+              folique, Shatavari... - avec exigence, parmi des marques
+              spécialisées, et nous vous les livrons directement chez vous.
               Mais notre engagement va au-delà du complément : à travers notre
               communauté et nos campagnes de sensibilisation, nous voulons que
               chaque femme se sente comprise et accompagnée.
@@ -104,7 +104,7 @@ export default function About() {
           Envie de rejoindre le jardin ?
         </h2>
         <p className="mt-4 text-forest-600">
-          Découvrez nos formules ou écrivez-nous - nous sommes là pour vous
+          Découvrez notre sélection ou écrivez-nous - nous sommes là pour vous
           accompagner, à chaque étape.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">

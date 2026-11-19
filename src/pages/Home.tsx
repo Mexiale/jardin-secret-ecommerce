@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowUpRight, CheckCircle2, Leaf, ShieldCheck, Sparkles, HeartHandshake } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, Leaf, ShieldCheck, Sparkles, HeartHandshake, Truck } from "lucide-react";
 import ProductCard from "../components/ProductCard";
 import { hasPrice } from "../data/products";
 import { useProducts } from "../context/ProductsContext";
@@ -26,7 +26,7 @@ export default function Home() {
             transition={{ duration: 0.7 }}
           >
             <span className="inline-flex items-center gap-2 rounded-full bg-cream-50/80 px-4 py-1.5 text-xs font-medium tracking-wide text-forest-700 ring-1 ring-forest-300/60">
-              <Leaf className="h-3.5 w-3.5" /> Conçu &amp; formulé en Côte d'Ivoire
+              <Leaf className="h-3.5 w-3.5" /> Sélectionné avec soin, livré en Côte d'Ivoire
             </span>
 
             <h1 className="mt-6 font-serif text-5xl leading-[1.05] text-forest-950 sm:text-6xl">
@@ -36,10 +36,10 @@ export default function Home() {
             </h1>
 
             <p className="mt-6 max-w-md text-lg leading-relaxed text-forest-700">
-              Jardin Secret conçoit des compléments alimentaires naturels
-              pour accompagner la fertilité, apaiser le SOPK et restaurer
-              l'équilibre hormonal - avec la rigueur de la science et la
-              douceur du soin de soi.
+              Jardin Secret sélectionne pour vous des compléments
+              alimentaires de qualité pour accompagner la fertilité, le SOPK
+              et l'équilibre hormonal - avec exigence, et la douceur du soin
+              de soi.
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-4">
@@ -60,10 +60,10 @@ export default function Home() {
 
             <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-forest-600">
               <span className="inline-flex items-center gap-1.5">
-                <ShieldCheck className="h-4 w-4 text-forest-500" /> Testé en laboratoire
+                <ShieldCheck className="h-4 w-4 text-forest-500" /> Sélection exigeante
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <Leaf className="h-4 w-4 text-forest-500" /> Ingrédients naturels
+                <Truck className="h-4 w-4 text-forest-500" /> Livraison sous 24h
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <HeartHandshake className="h-4 w-4 text-forest-500" /> Accompagnement humain
@@ -217,7 +217,7 @@ export default function Home() {
           <div className="relative">
             <img
               src="https://images.unsplash.com/photo-1770988042769-8457db10f3c6?q=80&w=1000&auto=format&fit=crop"
-              alt="Ingrédients naturels Jardin Secret"
+              alt="Univers bien-être Jardin Secret"
               className="aspect-[4/5] w-full rounded-3xl object-cover"
             />
             <div className="absolute -bottom-6 -right-6 hidden max-w-[220px] rounded-2xl bg-cream-50 p-5 shadow-xl ring-1 ring-forest-100 sm:block">
@@ -235,9 +235,9 @@ export default function Home() {
               Plus qu'un complément, un soutien.
             </h2>
             <p className="mt-5 leading-relaxed text-forest-700">
-              Chez Jardin Secret, chaque formule est pensée avec des
-              professionnels de santé et testée en laboratoire indépendant.
-              Mais nous savons que vivre avec le SOPK ou un parcours de
+              Chez Jardin Secret, chaque produit est choisi avec exigence,
+              pour sa composition et son dosage, parmi des marques
+              spécialisées. Mais nous savons que vivre avec le SOPK ou un parcours de
               fertilité, ce n'est pas qu'une question de dosage - c'est aussi
               une charge émotionnelle. C'est pourquoi chaque commande
               s'accompagne d'un espace d'écoute et d'une communauté qui
@@ -245,8 +245,8 @@ export default function Home() {
             </p>
             <ul className="mt-8 space-y-4">
               {[
-                "Formules dosées selon les recommandations scientifiques",
-                "Fabrication traçable, contrôlée en laboratoire indépendant",
+                "Des produits choisis pour leur composition et leur dosage",
+                "Des marques spécialisées, sélectionnées avec exigence",
                 "Accompagnement émotionnel via notre communauté privée",
                 "Livraison partout en Côte d'Ivoire, paiement en espèces à la livraison",
               ].map((item) => (
@@ -265,9 +265,9 @@ export default function Home() {
         <div className="mx-auto max-w-3xl px-6 text-center lg:px-10">
           <Sparkles className="mx-auto h-6 w-6 text-gold-400" />
           <p className="mt-6 font-serif text-2xl italic leading-relaxed sm:text-3xl">
-            « Après des mois de cycles irréguliers, le Myo-Inositol Équilibre
-            et le suivi de la communauté Jardin Secret m'ont redonné confiance
-            en mon corps. »
+            « Après des mois de cycles irréguliers, mes compléments Jardin
+            Secret et le suivi de la communauté m'ont redonné confiance en
+            mon corps. »
           </p>
           <p className="mt-6 text-sm text-forest-300">
             Aïcha K. - Abidjan, Cliente depuis 2024

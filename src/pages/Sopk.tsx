@@ -57,22 +57,21 @@ export default function Sopk() {
               Comment Jardin Secret accompagne
             </h2>
             <p className="mt-6 leading-relaxed text-forest-700">
-              Le myo-inositol, associé au D-chiro-inositol dans le bon ratio,
-              est aujourd'hui l'un des compléments les mieux documentés pour
-              soutenir la sensibilité à l'insuline et la régularité du cycle
-              chez les femmes atteintes de SOPK.
+              Jardin Secret vous propose une sélection de compléments
+              alimentaires adaptés au SOPK, choisis pour leur composition et
+              leur dosage.
             </p>
             <p className="mt-4 leading-relaxed text-forest-700">
-              Nous associons cette base scientifique à un accompagnement
-              humain : conseils personnalisés, communauté d'échange, et
-              contenus pour mieux vivre avec le SOPK au quotidien - parce que
-              le bien-être hormonal se joue aussi dans la tête.
+              Nous y associons un accompagnement humain : conseils
+              personnalisés, communauté d'échange, et contenus pour mieux
+              vivre avec le SOPK au quotidien - parce que le bien-être
+              hormonal se joue aussi dans la tête.
             </p>
             <Link
               to="/boutique?categorie=SOPK"
               className="mt-8 inline-flex rounded-full bg-forest-900 px-7 py-3.5 text-sm font-medium text-cream-50 hover:bg-forest-800"
             >
-              Voir les formules SOPK
+              Voir les produits SOPK
             </Link>
           </div>
         </div>
@@ -85,7 +84,7 @@ export default function Sopk() {
               Recommandés pour le SOPK
             </span>
             <h2 className="mt-3 font-serif text-3xl sm:text-4xl">
-              Des formules adaptées à votre parcours
+              Une sélection adaptée à votre parcours
             </h2>
           </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

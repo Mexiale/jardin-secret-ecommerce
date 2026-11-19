@@ -236,7 +236,7 @@ export default function Cart() {
           Votre panier est vide
         </h1>
         <p className="mt-3 text-forest-600">
-          Parcourez nos formules pensées pour votre équilibre hormonal.
+          Parcourez notre sélection pour votre équilibre hormonal.
         </p>
         <Link
           to="/boutique"

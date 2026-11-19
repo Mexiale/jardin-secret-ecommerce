@@ -36,12 +36,11 @@ export default function Shop() {
           Boutique
         </span>
         <h1 className="mt-3 font-serif text-4xl text-forest-950">
-          Des formules pensées pour votre équilibre
+          Une sélection pensée pour votre équilibre
         </h1>
         <p className="mt-4 text-forest-600">
-          Chaque produit Jardin Secret est formulé avec des professionnels de
-          santé, dosé selon les recommandations scientifiques et fabriqué
-          sous contrôle qualité strict.
+          Chaque produit de la boutique est choisi avec soin pour sa
+          composition et son dosage, parmi des marques spécialisées.
         </p>
       </div>
 
