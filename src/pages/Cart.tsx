@@ -6,6 +6,7 @@ import {
   Banknote,
   Clock,
   Download,
+  Loader2,
   Minus,
   Phone,
   PhoneCall,
@@ -16,8 +17,7 @@ import {
 import { useCart } from "../context/CartContext";
 import { useStock } from "../context/StockContext";
 import { formatPrice } from "../lib/format";
-import { saveOrder } from "../lib/orders";
-import { decrementStock } from "../lib/stock";
+import { placeOrder } from "../lib/orders";
 import type { Product } from "../data/products";
 import ProductImage from "../components/ProductImage";
 
@@ -53,44 +53,47 @@ export default function Cart() {
   const [step, setStep] = useState<Step>("cart");
   const [delivery, setDelivery] = useState<DeliveryInfo>(emptyDeliveryInfo);
   const [order, setOrder] = useState<OrderSummary | null>(null);
+  const [placing, setPlacing] = useState(false);
+  const [orderError, setOrderError] = useState("");
 
   const handleDeliverySubmit = (e: FormEvent) => {
     e.preventDefault();
     setStep("validation");
   };
 
-  const handleConfirmOrder = () => {
-    const orderNumber = `JS-${Date.now().toString().slice(-6)}`;
+  const handleConfirmOrder = async () => {
+    if (placing) return; // pas de double commande sur double-clic
+    setPlacing(true);
+    setOrderError("");
 
-    setOrder({
-      orderNumber,
-      date: new Date().toLocaleDateString("fr-FR", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }),
-      items,
-      subtotal,
-      delivery,
-    });
-    setStep("confirmed");
-    clearCart();
+    try {
+      // La confirmation n'est affichée qu'une fois la commande réellement enregistrée.
+      const placed = await placeOrder({ ...delivery, items });
 
-    // Enregistrement en base et décrément du stock en best-effort : la confirmation
-    // ne doit pas attendre le réseau, la livraison reste coordonnée par téléphone.
-    saveOrder({ orderNumber, ...delivery, items, subtotal }).catch((err) => {
-      console.error("Échec de l'enregistrement de la commande :", err);
-    });
-
-    Promise.all(
-      items.map(({ product, quantity }) => decrementStock(product.slug, quantity))
-    )
-      .catch((err) => {
-        console.error("Échec du décrément de stock :", err);
-      })
-      .finally(() => {
-        refreshStock();
+      // Prix et total affichés = ceux calculés par le serveur.
+      const serverPrice = new Map(placed.items.map((i) => [i.slug, i.price]));
+      setOrder({
+        orderNumber: placed.orderNumber,
+        date: new Date().toLocaleDateString("fr-FR", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
+        items: items.map(({ product, quantity }) => ({
+          product: { ...product, price: serverPrice.get(product.slug) ?? product.price },
+          quantity,
+        })),
+        subtotal: placed.subtotal,
+        delivery,
       });
+      setStep("confirmed");
+      clearCart();
+    } catch (err) {
+      setOrderError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setPlacing(false);
+      refreshStock();
+    }
   };
 
   const handleDownloadPdf = () => {
@@ -340,11 +343,19 @@ export default function Cart() {
             </p>
           </div>
 
+          {orderError && (
+            <p role="alert" className="rounded-2xl bg-red-50 p-4 text-sm text-red-700">
+              {orderError}
+            </p>
+          )}
+
           <button
             onClick={handleConfirmOrder}
-            className="w-full rounded-full bg-forest-900 px-6 py-3.5 text-sm font-medium text-cream-50 hover:bg-forest-800"
+            disabled={placing}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-forest-900 px-6 py-3.5 text-sm font-medium text-cream-50 hover:bg-forest-800 disabled:cursor-wait disabled:opacity-70"
           >
-            Confirmer ma commande
+            {placing && <Loader2 className="h-4 w-4 animate-spin" />}
+            {placing ? "Enregistrement de votre commande..." : "Confirmer ma commande"}
           </button>
         </div>
       </div>
@@ -382,6 +393,9 @@ export default function Cart() {
             <input
               required
               type="text"
+              autoComplete="name"
+              minLength={2}
+              maxLength={100}
               value={delivery.fullName}
               onChange={(e) =>
                 setDelivery((d) => ({ ...d, fullName: e.target.value }))
@@ -397,6 +411,11 @@ export default function Cart() {
             <input
               required
               type="tel"
+              autoComplete="tel"
+              inputMode="tel"
+              pattern="\+?[0-9 \(\)\.\-]{8,20}"
+              title="Numéro de téléphone (chiffres, espaces et + uniquement)"
+              maxLength={20}
               placeholder="+225 07 00 00 00 00"
               value={delivery.phone}
               onChange={(e) =>
@@ -417,6 +436,8 @@ export default function Cart() {
               required
               type="text"
               placeholder="Ex. Abidjan - Deux-Plateaux"
+              minLength={2}
+              maxLength={80}
               value={delivery.city}
               onChange={(e) =>
                 setDelivery((d) => ({ ...d, city: e.target.value }))
@@ -432,6 +453,7 @@ export default function Cart() {
             <textarea
               required
               minLength={10}
+              maxLength={300}
               rows={3}
               placeholder="Quartier, rue, numéro de porte, points de repère (immeuble, commerce proche...)"
               value={delivery.address}
@@ -452,6 +474,7 @@ export default function Cart() {
             </label>
             <textarea
               rows={2}
+              maxLength={1000}
               value={delivery.notes}
               onChange={(e) =>
                 setDelivery((d) => ({ ...d, notes: e.target.value }))

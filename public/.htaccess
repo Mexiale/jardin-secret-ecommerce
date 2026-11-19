@@ -12,6 +12,27 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.html [L]
 
+# En-têtes de sécurité
+<IfModule mod_headers.c>
+  # Toujours en HTTPS pendant 1 an (le navigateur refuse ensuite le HTTP)
+  Header always set Strict-Transport-Security "max-age=31536000"
+  # Le site ne peut pas être affiché dans une iframe d'un autre site (anti-clickjacking)
+  Header always set X-Frame-Options "DENY"
+  # Le navigateur ne devine pas le type des fichiers
+  Header always set X-Content-Type-Options "nosniff"
+  # Les sites externes ne voient que le domaine d'origine, pas l'URL complète
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # Caméra, micro, géolocalisation et paiement désactivés
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  # Sources autorisées : le site lui-même, Supabase, Google Fonts, Unsplash
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://*.supabase.co https://images.unsplash.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
+</IfModule>
+
+# Fichiers de configuration jamais servis
+<FilesMatch "^\.(env|git|hostinger)">
+  Require all denied
+</FilesMatch>
+
 # Cache : les fichiers de build ont un nom unique, on peut les garder longtemps.
 <IfModule mod_expires.c>
   ExpiresActive On

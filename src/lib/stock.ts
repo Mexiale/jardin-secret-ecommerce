@@ -18,10 +18,4 @@ export async function updateStock(productSlug: string, quantity: number) {
   if (error) throw error;
 }
 
-export async function decrementStock(productSlug: string, quantity: number) {
-  const { error } = await supabase.rpc("decrement_stock", {
-    p_product_slug: productSlug,
-    p_quantity: quantity,
-  });
-  if (error) throw error;
-}
+// Le stock est décrémenté côté serveur par la fonction place_order (voir src/lib/orders.ts).
