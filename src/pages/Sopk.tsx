@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { CheckCircle2 } from "lucide-react";
 import ProductCard from "../components/ProductCard";
-import { products } from "../data/products";
+import { useProducts } from "../context/ProductsContext";
 
 const symptoms = [
   "Cycles irréguliers ou absents",
@@ -11,9 +11,10 @@ const symptoms = [
   "Fatigue et fluctuations de l'humeur",
 ];
 
-const sopkProducts = products.filter((p) => p.category === "SOPK" || p.category === "Fertilité");
-
 export default function Sopk() {
+  const { products } = useProducts();
+  const sopkProducts = products.filter((p) => p.category === "SOPK" || p.category === "Fertilité");
+
   return (
     <div>
       <section className="bg-forest-100/60 py-20">
@@ -27,7 +28,7 @@ export default function Sopk() {
           <p className="mt-6 text-lg leading-relaxed text-forest-700">
             Le Syndrome des Ovaires Polykystiques touche environ 1 femme sur
             10 en âge de procréer. Souvent mal diagnostiqué, il reste
-            entouré de silence — alors qu'il se gère très bien, au quotidien.
+            entouré de silence - alors qu'il se gère très bien, au quotidien.
           </p>
         </div>
       </section>
@@ -64,7 +65,7 @@ export default function Sopk() {
             <p className="mt-4 leading-relaxed text-forest-700">
               Nous associons cette base scientifique à un accompagnement
               humain : conseils personnalisés, communauté d'échange, et
-              contenus pour mieux vivre avec le SOPK au quotidien — parce que
+              contenus pour mieux vivre avec le SOPK au quotidien - parce que
               le bien-être hormonal se joue aussi dans la tête.
             </p>
             <Link

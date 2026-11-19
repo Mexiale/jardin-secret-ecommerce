@@ -1,25 +1,50 @@
 import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { Star, Truck, ShieldCheck, Leaf, Minus, Plus, CheckCircle2 } from "lucide-react";
-import { getProductBySlug } from "../data/products";
+import { Truck, Banknote, Leaf, Minus, Plus, CheckCircle2, Loader2 } from "lucide-react";
+import { hasPrice } from "../data/products";
 import { formatPrice } from "../lib/format";
 import { useCart } from "../context/CartContext";
+import { useStock } from "../context/StockContext";
+import { useProducts } from "../context/ProductsContext";
 import ProductCard from "../components/ProductCard";
-import { products } from "../data/products";
+import ProductImage from "../components/ProductImage";
+import ProductReviews from "../components/ProductReviews";
+
+const LOW_STOCK_THRESHOLD = 3;
 
 export default function ProductPage() {
   const { slug } = useParams();
+  const { products, loading, getProductBySlug } = useProducts();
   const product = slug ? getProductBySlug(slug) : undefined;
   const { addItem } = useCart();
-  const [activeImage, setActiveImage] = useState(0);
+  const { getStock } = useStock();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
 
-  if (!product) return <Navigate to="/boutique" replace />;
+  if (!product) {
+    // Un produit ajouté depuis l'admin n'existe pas dans le catalogue local :
+    // on attend la réponse de Supabase avant de conclure qu'il n'existe pas.
+    if (loading) {
+      return (
+        <div className="flex justify-center py-32 text-forest-400">
+          <Loader2 className="h-6 w-6 animate-spin" />
+        </div>
+      );
+    }
+    return <Navigate to="/boutique" replace />;
+  }
 
   const related = products.filter((p) => p.slug !== product.slug && p.category === product.category).slice(0, 3);
 
+  const availableStock = getStock(product.slug);
+  const isOutOfStock = availableStock !== null && availableStock <= 0;
+  const isLowStock =
+    availableStock !== null && availableStock > 0 && availableStock <= LOW_STOCK_THRESHOLD;
+
+  const priced = hasPrice(product);
+
   const handleAdd = () => {
+    if (isOutOfStock || !priced) return;
     addItem(product, quantity);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
@@ -37,28 +62,10 @@ export default function ProductPage() {
 
       <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
         {/* Gallery */}
-        <div className="flex flex-col-reverse gap-4 sm:flex-row lg:sticky lg:top-24">
-          <div className="flex shrink-0 gap-3 overflow-x-auto sm:flex-col">
-            {product.gallery.map((img, i) => (
-              <button
-                key={img}
-                onClick={() => setActiveImage(i)}
-                className={`h-20 w-20 shrink-0 overflow-hidden rounded-xl ring-2 transition-colors ${
-                  activeImage === i ? "ring-forest-600" : "ring-transparent hover:ring-forest-200"
-                }`}
-              >
-                <img src={img} alt="" className="h-full w-full object-cover" />
-              </button>
-            ))}
-          </div>
-          <div className="relative flex-1 overflow-hidden rounded-3xl bg-forest-100">
-            {product.bestseller && (
-              <span className="absolute left-4 top-4 z-10 rounded-full bg-gold-500 px-3 py-1 text-xs font-semibold text-forest-950">
-                Best-seller
-              </span>
-            )}
-            <img
-              src={product.gallery[activeImage]}
+        <div className="lg:sticky lg:top-24">
+          <div className="relative overflow-hidden rounded-3xl bg-forest-100">
+            <ProductImage
+              src={product.image}
               alt={product.name}
               className="aspect-square w-full object-cover"
             />
@@ -73,29 +80,28 @@ export default function ProductPage() {
           <h1 className="mt-2 font-serif text-3xl text-forest-950 sm:text-4xl">
             {product.name}
           </h1>
+          {product.brand && (
+            <p className="mt-1 text-sm text-forest-500">{product.brand}</p>
+          )}
           <p className="mt-2 text-forest-600">{product.tagline}</p>
 
-          <div className="mt-4 flex items-center gap-2 text-sm">
-            <div className="flex items-center gap-0.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star
-                  key={i}
-                  className={`h-4 w-4 ${
-                    i < Math.round(product.rating) ? "fill-gold-500 text-gold-500" : "text-forest-200"
-                  }`}
-                />
-              ))}
-            </div>
-            <span className="font-medium text-forest-800">{product.rating}</span>
-            <span className="text-forest-500">({product.reviews} avis)</span>
-          </div>
+          {isOutOfStock && (
+            <p className="mt-4 inline-flex rounded-full bg-red-100 px-3 py-1.5 text-sm font-medium text-red-700">
+              Rupture de stock
+            </p>
+          )}
+          {isLowStock && (
+            <p className="mt-4 text-sm font-medium text-gold-600">
+              Plus que {availableStock} en stock - commandez vite
+            </p>
+          )}
 
           <div className="mt-6 rounded-2xl bg-forest-100/70 p-5">
             <div className="flex flex-wrap items-center gap-3">
               <span className="font-serif text-2xl text-forest-950">
-                {formatPrice(product.price)}
+                {priced ? formatPrice(product.price) : "Prix bientôt disponible"}
               </span>
-              {product.compareAtPrice && (
+              {priced && product.compareAtPrice && (
                 <>
                   <span className="text-forest-400 line-through">
                     {formatPrice(product.compareAtPrice)}
@@ -108,10 +114,10 @@ export default function ProductPage() {
             </div>
             <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-xs text-forest-600">
               <span className="inline-flex items-center gap-1.5">
-                <Truck className="h-4 w-4" /> Livraison à Abidjan sous 24-48h
+                <Truck className="h-4 w-4" /> Livraison sous 24h - le livreur vous appelle
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <ShieldCheck className="h-4 w-4" /> Paiement sécurisé Mobile Money / CinetPay
+                <Banknote className="h-4 w-4" /> Paiement en espèces à la livraison
               </span>
             </div>
           </div>
@@ -120,7 +126,8 @@ export default function ProductPage() {
             <div className="flex items-center rounded-full border border-forest-300">
               <button
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                className="p-3 text-forest-700 hover:text-forest-900"
+                disabled={isOutOfStock}
+                className="p-3 text-forest-700 hover:text-forest-900 disabled:opacity-50"
                 aria-label="Diminuer la quantité"
               >
                 <Minus className="h-4 w-4" />
@@ -129,8 +136,11 @@ export default function ProductPage() {
                 {quantity}
               </span>
               <button
-                onClick={() => setQuantity((q) => q + 1)}
-                className="p-3 text-forest-700 hover:text-forest-900"
+                onClick={() =>
+                  setQuantity((q) => (availableStock !== null ? Math.min(availableStock, q + 1) : q + 1))
+                }
+                disabled={isOutOfStock}
+                className="p-3 text-forest-700 hover:text-forest-900 disabled:opacity-50"
                 aria-label="Augmenter la quantité"
               >
                 <Plus className="h-4 w-4" />
@@ -139,9 +149,14 @@ export default function ProductPage() {
 
             <button
               onClick={handleAdd}
-              className="flex flex-1 items-center justify-center gap-2 rounded-full bg-forest-900 px-6 py-3.5 text-sm font-medium text-cream-50 transition-colors hover:bg-forest-800"
+              disabled={isOutOfStock || !priced}
+              className="flex flex-1 items-center justify-center gap-2 rounded-full bg-forest-900 px-6 py-3.5 text-sm font-medium text-cream-50 transition-colors hover:bg-forest-800 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {added ? (
+              {isOutOfStock ? (
+                "Rupture de stock"
+              ) : !priced ? (
+                "Bientôt disponible"
+              ) : added ? (
                 <>
                   <CheckCircle2 className="h-4 w-4" /> Ajouté au panier
                 </>
@@ -151,17 +166,19 @@ export default function ProductPage() {
             </button>
           </div>
 
-          <div className="mt-10">
-            <h3 className="mb-3 font-serif text-lg text-forest-900">Bienfaits clés</h3>
-            <ul className="space-y-2.5">
-              {product.benefits.map((b) => (
-                <li key={b} className="flex items-start gap-2.5 text-sm text-forest-700">
-                  <Leaf className="mt-0.5 h-4 w-4 shrink-0 text-forest-500" />
-                  {b}
-                </li>
-              ))}
-            </ul>
-          </div>
+          {product.benefits.length > 0 && (
+            <div className="mt-10">
+              <h3 className="mb-3 font-serif text-lg text-forest-900">Bienfaits clés</h3>
+              <ul className="space-y-2.5">
+                {product.benefits.map((b) => (
+                  <li key={b} className="flex items-start gap-2.5 text-sm text-forest-700">
+                    <Leaf className="mt-0.5 h-4 w-4 shrink-0 text-forest-500" />
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div className="mt-8 space-y-6 border-t border-forest-200 pt-6">
             <p className="leading-relaxed text-forest-700">{product.description}</p>
@@ -189,6 +206,8 @@ export default function ProductPage() {
           </div>
         </div>
       )}
+
+      <ProductReviews productSlug={product.slug} />
     </div>
   );
 }

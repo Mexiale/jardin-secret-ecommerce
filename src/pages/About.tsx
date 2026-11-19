@@ -58,13 +58,13 @@ export default function About() {
             </h2>
             <p className="mt-5 leading-relaxed text-forest-700">
               Le nom « Jardin Secret » évoque cet espace intime que chacune
-              porte en elle — un lieu où l'on cultive patiemment son équilibre,
+              porte en elle - un lieu où l'on cultive patiemment son équilibre,
               loin du jugement. Nous avons voulu créer une marque qui parle
               avec honnêteté du SOPK, de la fertilité et de la santé
               hormonale, sujets encore trop peu abordés en Côte d'Ivoire.
             </p>
             <p className="mt-4 leading-relaxed text-forest-700">
-              Nos formules — Myo-Inositol, oméga-3, ashwagandha, vitamine D —
+              Nos formules - berbérine, NAC, acide folique, Shatavari -
               sont sélectionnées avec des professionnels de santé, fabriquées
               sous contrôle qualité strict, et livrées directement chez vous.
               Mais notre engagement va au-delà du complément : à travers notre
@@ -104,7 +104,7 @@ export default function About() {
           Envie de rejoindre le jardin ?
         </h2>
         <p className="mt-4 text-forest-600">
-          Découvrez nos formules ou écrivez-nous — nous sommes là pour vous
+          Découvrez nos formules ou écrivez-nous - nous sommes là pour vous
           accompagner, à chaque étape.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">

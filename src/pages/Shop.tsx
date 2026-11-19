@@ -1,17 +1,13 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
-import { products, type Product } from "../data/products";
+import { CATEGORIES, type Product } from "../data/products";
+import { useProducts } from "../context/ProductsContext";
 
-const categories: Array<Product["category"] | "Tous"> = [
-  "Tous",
-  "SOPK",
-  "Fertilité",
-  "Équilibre hormonal",
-  "Bien-être global",
-];
+const categories: Array<Product["category"] | "Tous"> = ["Tous", ...CATEGORIES];
 
 export default function Shop() {
+  const { products } = useProducts();
   const [searchParams, setSearchParams] = useSearchParams();
   const initial = searchParams.get("categorie") as Product["category"] | null;
   const [active, setActive] = useState<Product["category"] | "Tous">(
@@ -20,7 +16,7 @@ export default function Shop() {
 
   const filtered = useMemo(
     () => (active === "Tous" ? products : products.filter((p) => p.category === active)),
-    [active]
+    [active, products]
   );
 
   const selectCategory = (cat: Product["category"] | "Tous") => {

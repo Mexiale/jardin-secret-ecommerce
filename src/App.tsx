@@ -7,6 +7,10 @@ import About from "./pages/About";
 import Sopk from "./pages/Sopk";
 import Contact from "./pages/Contact";
 import Cart from "./pages/Cart";
+import AvisAdmin from "./pages/admin/AvisAdmin";
+import StockAdmin from "./pages/admin/StockAdmin";
+import ProduitsAdmin from "./pages/admin/ProduitsAdmin";
+import ProduitForm from "./pages/admin/ProduitForm";
 
 function App() {
   return (
@@ -20,6 +24,11 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/panier" element={<Cart />} />
       </Route>
+      <Route path="/admin/avis" element={<AvisAdmin />} />
+      <Route path="/admin/stock" element={<StockAdmin />} />
+      <Route path="/admin/produits" element={<ProduitsAdmin />} />
+      <Route path="/admin/produits/nouveau" element={<ProduitForm />} />
+      <Route path="/admin/produits/:slug" element={<ProduitForm />} />
     </Routes>
   );
 }

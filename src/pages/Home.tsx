@@ -2,14 +2,16 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowUpRight, CheckCircle2, Leaf, ShieldCheck, Sparkles, HeartHandshake } from "lucide-react";
 import ProductCard from "../components/ProductCard";
-import { products } from "../data/products";
+import { hasPrice } from "../data/products";
+import { useProducts } from "../context/ProductsContext";
+import ProductImage from "../components/ProductImage";
 import { formatPrice } from "../lib/format";
 
-const featured = products.filter((p) => p.bestseller).concat(
-  products.filter((p) => !p.bestseller).slice(0, 1)
-);
-
 export default function Home() {
+  const { products } = useProducts();
+  const featured = products.filter((p) => p.featured);
+  const hero = featured[0] ?? products[0];
+
   return (
     <div>
       {/* Hero */}
@@ -36,7 +38,7 @@ export default function Home() {
             <p className="mt-6 max-w-md text-lg leading-relaxed text-forest-700">
               Jardin Secret conçoit des compléments alimentaires naturels
               pour accompagner la fertilité, apaiser le SOPK et restaurer
-              l'équilibre hormonal — avec la rigueur de la science et la
+              l'équilibre hormonal - avec la rigueur de la science et la
               douceur du soin de soi.
             </p>
 
@@ -75,6 +77,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.15 }}
             className="relative mx-auto w-full max-w-md"
           >
+            {hero && (
             <div className="overflow-hidden rounded-[28px] border border-forest-200 bg-cream-50 shadow-2xl shadow-forest-900/10">
               <div className="flex items-center gap-1.5 border-b border-forest-100 px-5 py-3">
                 <span className="h-2.5 w-2.5 rounded-full bg-red-300" />
@@ -82,28 +85,34 @@ export default function Home() {
                 <span className="h-2.5 w-2.5 rounded-full bg-forest-300" />
               </div>
               <div className="relative">
-                <img
-                  src="https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?q=80&w=1200&auto=format&fit=crop"
-                  alt="Myo-Inositol Équilibre, complément SOPK"
+                <ProductImage
+                  src={hero.image}
+                  alt={hero.name}
                   className="h-72 w-full object-cover"
                 />
-                <span className="absolute right-4 top-4 rounded-full bg-cream-50 px-3 py-1 text-xs font-semibold tracking-wide text-forest-800">
-                  BEST-SELLER
+                <span className="absolute right-4 top-4 rounded-full bg-forest-900/90 px-3 py-1 text-xs font-semibold tracking-wide text-cream-50">
+                  {hero.category.toUpperCase()}
                 </span>
               </div>
-              <div className="flex items-center justify-between px-5 py-5">
+              <div className="flex items-center justify-between gap-4 px-5 py-5">
                 <div>
-                  <p className="font-serif text-lg text-forest-900">Myo-Inositol Équilibre</p>
-                  <p className="text-sm text-forest-500">Ratio 40:1 · 60 sachets</p>
+                  <p className="font-serif text-lg text-forest-900">{hero.name}</p>
+                  <p className="text-sm text-forest-500">{hero.tagline}</p>
                 </div>
-                <p className="font-serif text-xl text-forest-900">{formatPrice(28000)}</p>
+                {hasPrice(hero) && (
+                  <p className="shrink-0 font-serif text-xl text-forest-900">{formatPrice(hero.price)}</p>
+                )}
               </div>
               <div className="px-5 pb-5">
-                <div className="flex items-center justify-center gap-2 rounded-full bg-forest-900 py-3 text-sm font-medium text-cream-50">
-                  Ajouter au panier
-                </div>
+                <Link
+                  to={`/produits/${hero.slug}`}
+                  className="flex items-center justify-center gap-2 rounded-full bg-forest-900 py-3 text-sm font-medium text-cream-50 transition-colors hover:bg-forest-800"
+                >
+                  Découvrir
+                </Link>
               </div>
             </div>
+            )}
 
             <motion.div
               initial={{ opacity: 0, x: 20 }}
@@ -188,10 +197,10 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mb-12 text-center">
             <span className="text-xs font-medium uppercase tracking-widest text-gold-600">
-              Les préférés
+              Notre sélection
             </span>
             <h2 className="mt-3 font-serif text-3xl text-forest-950 sm:text-4xl">
-              Nos formules les plus choisies
+              Les essentiels de l'équilibre hormonal
             </h2>
           </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -229,7 +238,7 @@ export default function Home() {
               Chez Jardin Secret, chaque formule est pensée avec des
               professionnels de santé et testée en laboratoire indépendant.
               Mais nous savons que vivre avec le SOPK ou un parcours de
-              fertilité, ce n'est pas qu'une question de dosage — c'est aussi
+              fertilité, ce n'est pas qu'une question de dosage - c'est aussi
               une charge émotionnelle. C'est pourquoi chaque commande
               s'accompagne d'un espace d'écoute et d'une communauté qui
               comprend.
@@ -239,7 +248,7 @@ export default function Home() {
                 "Formules dosées selon les recommandations scientifiques",
                 "Fabrication traçable, contrôlée en laboratoire indépendant",
                 "Accompagnement émotionnel via notre communauté privée",
-                "Livraison partout en Côte d'Ivoire, paiement Mobile Money",
+                "Livraison partout en Côte d'Ivoire, paiement en espèces à la livraison",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-3 text-forest-700">
                   <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-forest-500" />
@@ -261,12 +270,12 @@ export default function Home() {
             en mon corps. »
           </p>
           <p className="mt-6 text-sm text-forest-300">
-            Aïcha K. — Abidjan, membre depuis 2024
+            Aïcha K. - Abidjan, membre depuis 2024
           </p>
         </div>
       </section>
 
-      {/* Newsletter */}
+      {/* Newsletter — masquée pour l'instant, à réactiver plus tard
       <section className="mx-auto max-w-4xl px-6 py-20 text-center lg:px-10">
         <h2 className="font-serif text-3xl text-forest-950 sm:text-4xl">
           Rejoignez le jardin
@@ -289,6 +298,7 @@ export default function Home() {
           </button>
         </form>
       </section>
+      */}
     </div>
   );
 }

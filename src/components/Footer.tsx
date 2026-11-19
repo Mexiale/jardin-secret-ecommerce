@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, Leaf } from "lucide-react";
+import { Mail } from "lucide-react";
 
 function InstagramIcon() {
   return (
@@ -26,13 +26,17 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
           <div className="lg:col-span-2">
             <div className="mb-4 flex items-center gap-2">
-              <Leaf className="h-6 w-6 text-gold-400" strokeWidth={1.5} />
+              <img
+                src="/icon-jardin-secret-gold.png"
+                alt="Jardin Secret"
+                className="h-8 w-auto object-contain"
+              />
               <span className="font-serif text-xl text-cream-50">Jardin Secret</span>
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-forest-200">
               Des compléments alimentaires pensés en Côte d'Ivoire pour
               accompagner l'équilibre hormonal, la fertilité et le bien-être
-              des femmes et des hommes — avec la science, mais aussi avec le
+              des femmes et des hommes - avec la science, mais aussi avec le
               cœur.
             </p>
             <div className="mt-6 flex gap-4">
@@ -51,7 +55,7 @@ export default function Footer() {
                 <FacebookIcon />
               </a>
               <a
-                href="mailto:contact@jardinsecret.ci"
+                href="mailto:jardin-secret@mexiale.com"
                 aria-label="Email"
                 className="rounded-full border border-forest-700 p-2 text-cream-100 transition-colors hover:border-gold-400 hover:text-gold-400"
               >
@@ -68,7 +72,10 @@ export default function Footer() {
               <li><Link to="/boutique" className="hover:text-cream-50">Tous les produits</Link></li>
               <li><Link to="/boutique?categorie=SOPK" className="hover:text-cream-50">SOPK</Link></li>
               <li><Link to="/boutique?categorie=Fertilité" className="hover:text-cream-50">Fertilité</Link></li>
+              <li><Link to="/boutique?categorie=Ménopause" className="hover:text-cream-50">Ménopause</Link></li>
+              <li><Link to="/boutique?categorie=Bien-être masculin" className="hover:text-cream-50">Bien-être masculin</Link></li>
               <li><Link to="/boutique?categorie=Équilibre hormonal" className="hover:text-cream-50">Équilibre hormonal</Link></li>
+              <li><Link to="/boutique?categorie=Beauté" className="hover:text-cream-50">Beauté</Link></li>
             </ul>
           </div>
 
@@ -87,7 +94,7 @@ export default function Footer() {
 
         <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-forest-800 pt-8 text-xs text-forest-400 sm:flex-row">
           <p>© {new Date().getFullYear()} Jardin Secret. Tous droits réservés.</p>
-          <p>Conçu avec soin à Abidjan, pour le monde entier.</p>
+          <p></p>
         </div>
 
         <div className="mt-4 border-t border-forest-800 pt-4 text-center text-xs text-forest-500">

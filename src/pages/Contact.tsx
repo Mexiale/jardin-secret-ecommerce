@@ -1,8 +1,38 @@
-import { useState } from "react";
-import { Mail, MapPin, Phone, Send } from "lucide-react";
+import { useState, type FormEvent } from "react";
+import { Mail, MapPin, Phone, Send, Loader2 } from "lucide-react";
+
+type Status = "idle" | "sending" | "sent" | "error";
 
 export default function Contact() {
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<Status>("idle");
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus("sending");
+    setError("");
+
+    const form = e.currentTarget;
+
+    try {
+      const response = await fetch("/contact.php", {
+        method: "POST",
+        body: new FormData(form),
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        setStatus("sent");
+        form.reset();
+      } else {
+        setStatus("error");
+        setError(data.error || "Une erreur est survenue. Merci de réessayer.");
+      }
+    } catch {
+      setStatus("error");
+      setError("Impossible d'envoyer le message. Vérifiez votre connexion et réessayez.");
+    }
+  };
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-16 lg:px-10">
@@ -21,7 +51,7 @@ export default function Contact() {
 
       <div className="grid grid-cols-1 gap-14 lg:grid-cols-5">
         <div className="lg:col-span-3">
-          {sent ? (
+          {status === "sent" ? (
             <div className="rounded-2xl bg-forest-100 p-8 text-forest-800">
               <p className="font-serif text-xl">Merci pour votre message 🌿</p>
               <p className="mt-2 text-sm text-forest-600">
@@ -29,13 +59,7 @@ export default function Contact() {
               </p>
             </div>
           ) : (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setSent(true);
-              }}
-              className="space-y-5"
-            >
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-forest-800">
@@ -44,6 +68,7 @@ export default function Contact() {
                   <input
                     required
                     type="text"
+                    name="name"
                     className="w-full rounded-xl border border-forest-200 bg-cream-50 px-4 py-3 text-sm focus:border-forest-500 focus:outline-none"
                   />
                 </div>
@@ -54,6 +79,7 @@ export default function Contact() {
                   <input
                     required
                     type="email"
+                    name="email"
                     className="w-full rounded-xl border border-forest-200 bg-cream-50 px-4 py-3 text-sm focus:border-forest-500 focus:outline-none"
                   />
                 </div>
@@ -62,7 +88,10 @@ export default function Contact() {
                 <label className="mb-1.5 block text-sm font-medium text-forest-800">
                   Sujet
                 </label>
-                <select className="w-full rounded-xl border border-forest-200 bg-cream-50 px-4 py-3 text-sm focus:border-forest-500 focus:outline-none">
+                <select
+                  name="subject"
+                  className="w-full rounded-xl border border-forest-200 bg-cream-50 px-4 py-3 text-sm focus:border-forest-500 focus:outline-none"
+                >
                   <option>Question sur un produit</option>
                   <option>Suivi de commande</option>
                   <option>Partenariat / ONG</option>
@@ -76,14 +105,29 @@ export default function Contact() {
                 <textarea
                   required
                   rows={5}
+                  name="message"
                   className="w-full rounded-xl border border-forest-200 bg-cream-50 px-4 py-3 text-sm focus:border-forest-500 focus:outline-none"
                 />
               </div>
+
+              {status === "error" && (
+                <p className="text-sm text-red-600">{error}</p>
+              )}
+
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 rounded-full bg-forest-900 px-7 py-3.5 text-sm font-medium text-cream-50 hover:bg-forest-800"
+                disabled={status === "sending"}
+                className="inline-flex items-center gap-2 rounded-full bg-forest-900 px-7 py-3.5 text-sm font-medium text-cream-50 transition-colors hover:bg-forest-800 disabled:opacity-60"
               >
-                Envoyer le message <Send className="h-4 w-4" />
+                {status === "sending" ? (
+                  <>
+                    Envoi en cours <Loader2 className="h-4 w-4 animate-spin" />
+                  </>
+                ) : (
+                  <>
+                    Envoyer le message <Send className="h-4 w-4" />
+                  </>
+                )}
               </button>
             </form>
           )}
@@ -105,7 +149,7 @@ export default function Contact() {
           <div className="rounded-2xl bg-forest-100/70 p-6">
             <Mail className="h-5 w-5 text-forest-600" />
             <p className="mt-3 font-medium text-forest-900">Email</p>
-            <p className="mt-1 text-sm text-forest-600">contact@jardinsecret.ci</p>
+            <p className="mt-1 text-sm text-forest-600">jardin-secret@mexiale.com</p>
           </div>
         </div>
       </div>

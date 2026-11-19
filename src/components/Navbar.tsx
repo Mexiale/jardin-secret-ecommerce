@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Menu, Search, ShoppingBag, X, Leaf } from "lucide-react";
+import { Menu, Search, ShoppingBag, X } from "lucide-react";
 import { useCart } from "../context/CartContext";
 
 const navLinks = [
@@ -17,11 +17,12 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-forest-200/60 bg-cream-50/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
-        <Link to="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
-          <Leaf className="h-6 w-6 text-forest-600" strokeWidth={1.5} />
-          <span className="font-serif text-xl tracking-wide text-forest-900">
-            Jardin Secret
-          </span>
+        <Link to="/" className="flex items-center" onClick={() => setOpen(false)}>
+          <img
+            src="/logo-jardin-secret.png"
+            alt="Jardin Secret"
+            className="h-14 w-auto object-contain"
+          />
         </Link>
 
         <nav className="hidden items-center gap-9 lg:flex">
