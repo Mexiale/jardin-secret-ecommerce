@@ -100,7 +100,14 @@ export default function Footer() {
         <div className="mt-4 border-t border-forest-800 pt-4 text-center text-xs text-forest-500">
           <p>
             Site réalisé par{" "}
-            <span className="font-medium text-gold-400">Mexiale Studio</span>
+            <a
+              href="https://mexiale.com"
+              target="_blank"
+              rel="noopener"
+              className="font-medium text-gold-400 underline-offset-4 transition-colors hover:text-gold-300 hover:underline"
+            >
+              Mexiale Studio
+            </a>
           </p>
         </div>
       </div>

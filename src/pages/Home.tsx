@@ -270,7 +270,7 @@ export default function Home() {
             en mon corps. »
           </p>
           <p className="mt-6 text-sm text-forest-300">
-            Aïcha K. - Abidjan, membre depuis 2024
+            Aïcha K. - Abidjan, Cliente depuis 2024
           </p>
         </div>
       </section>
